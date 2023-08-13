@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  localstack:
+    container_name: localstack_main
+    image: localstack/localstack-pro:latest
+    environment:
+      - LOCALSTACK_API_KEY={YOUR_API_KEY}
+      - DEBUG=1
+      - LS_LOG=trace # more verbose logging
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # exYOUR_LOCALSTACK_API_KEYternal services port range
+      - "127.0.0.1:53:53"                # DNS config (required for PrlYOUR_LOCALSTACK_API_KEY)
+      - "127.0.0.1:53:53/udp"            # DNS config (required for Pro)
+      - "127.0.0.1:443:443"              # LocalStack HTTPS Gateway (required for Pro)
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '/tmp/localstack:/tmp/locastack'
+    privileged: true
