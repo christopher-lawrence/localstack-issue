@@ -1,26 +1,20 @@
 from constructs import Construct
 from aws_cdk import (
-    Duration,
     Stack,
-    aws_iam as iam,
-    aws_sqs as sqs,
-    aws_sns as sns,
-    aws_sns_subscriptions as subs,
+    aws_lambda as _lambda,
 )
-
 
 class LocalstackIssueStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        queue = sqs.Queue(
-            self, "LocalstackIssueQueue",
-            visibility_timeout=Duration.seconds(300),
+        my_lambda = _lambda.DockerImageFunction(self, 'HelloHandler',
+                code = _lambda.DockerImageCode.from_image_asset('./lambda'),
         )
 
-        topic = sns.Topic(
-            self, "LocalstackIssueTopic"
-        )
+        # apigw.LambdaRestApi(
+        #     self, 'Endpoint',
+        #     handler=my_lambda
+        # )
 
-        topic.add_subscription(subs.SqsSubscription(queue))
